@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตลาดอสังหาริมทรัพย์ ทรัพย์บังคับคดี และสิ่งปลูกสร้างไม้เก่า จังหวัดกาฬสินธุ์ | FastLEDChecker Analytics</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Leaflet GIS Map CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            kalasin: '#c25e00',
+            wood: '#8b5a2b',
+            led: '#d97706',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Header Section -->
+  <header class="glass-header sticky top-0 z-40 transition-all shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 bg-gradient-to-tr from-orange-600 to-amber-700 rounded-xl flex items-center justify-center text-white shadow-md">
+            <span class="text-2xl font-black">ก</span>
+          </div>
+          <div>
+            <h1 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight">
+              อสังหาริมทรัพย์ & สิ่งปลูกสร้างไม้เก่า <span class="text-orange-600">กาฬสินธุ์</span>
+            </h1>
+            <p class="text-xs text-slate-500 font-medium">
+              ระบบตลาดดิจิทัลและวิเคราะห์ทรัพย์บังคับคดี (FastLEDChecker Engine)
+            </p>
+          </div>
+        </div>
+
+        <!-- Role Simulator & Actions -->
+        <div class="flex items-center gap-3">
+          <a href="chapter1_react.html" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shadow-sm flex items-center gap-1">
+            <span>📄 อ่านบทที่ 1 (ReactJS)</span>
+          </a>
+
+          <div class="hidden md:flex items-center bg-slate-100 p-1.5 rounded-lg border border-slate-200 text-xs">
+            <span class="text-slate-500 font-semibold px-2">บทบาทการเข้าถึง:</span>
+            <select id="roleSelect" class="bg-white border border-slate-300 text-slate-800 rounded px-2 py-1 font-medium focus:outline-none">
+              <option value="investor">นักลงทุน / สมาชิกพรีเมียม (Full Analytics)</option>
+              <option value="guest">ผู้ใช้งานทั่วไป (Guest View)</option>
+              <option value="vendor">ผู้ขาย / ช่างรื้อถอน (Vendor/Contractor)</option>
+              <option value="admin">ผู้ดูแลระบบ (Admin)</option>
+            </select>
+          </div>
+
+          <button onclick="openCompareModal()" class="relative bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-2 rounded-lg border border-orange-200 transition flex items-center gap-1.5">
+            <span>เปรียบเทียบ</span>
+            <span id="compareCount" class="bg-orange-600 text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center font-bold">0</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex space-x-6 border-t border-slate-200/60 overflow-x-auto text-sm font-medium pt-2">
+        <button class="nav-tab active pb-3 px-1" data-tab="tab-catalog">
+          🏠 ทรัพย์สินทั้งหมด
+        </button>
+        <button class="nav-tab pb-3 px-1 flex items-center gap-1" data-tab="tab-fastled">
+          <span class="text-amber-500 font-bold">⚡</span> FastLEDChecker วิเคราะห์ประมูล
+        </button>
+        <button class="nav-tab pb-3 px-1 flex items-center gap-1" data-tab="tab-wood">
+          🪵 ตลาดบ้านไม้เก่า & คำนวณราคาไม้
+        </button>
+        <button class="nav-tab pb-3 px-1" data-tab="tab-map">
+          🗺️ แผนที่ GIS กาฬสินธุ์ 18 อำเภอ
+        </button>
+        <button class="nav-tab pb-3 px-1" data-tab="tab-contractors">
+          🛠️ บริการช่างรื้อถอน
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="bg-gradient-to-r from-slate-900 via-amber-950 to-orange-950 text-white py-8 px-4 sm:px-6 lg:px-8 shadow-inner">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="max-w-2xl">
+        <span class="inline-block bg-amber-500/20 text-amber-300 text-xs px-3 py-1 rounded-full font-medium border border-amber-500/30 mb-3">
+          📍 ข้อมูลซิงค์ตรงจาก https://www.fastledchecker.com (กาฬสินธุ์ 2,619+ รายการ)
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+          ตลาดอสังหาริมทรัพย์ ทรัพย์บังคับคดี <br class="hidden sm:inline">และสิ่งปลูกสร้างไม้เก่า กาฬสินธุ์
+        </h2>
+        <p class="text-slate-300 text-sm leading-relaxed mb-4">
+          รวบรวมและวิเคราะห์ข้อมูลทรัพย์ขายทอดตลาดจากกรมบังคับคดีในจังหวัดกาฬสินธุ์ครอบคลุมทั้ง 18 อำเภอ วิเคราะห์ราคาเสนอประมูลสูงสุด (Maximum Bid) และการจำนองติดไป
+        </p>
+      </div>
+
+      <!-- Quick FastLED Stats Card -->
+      <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 w-full md:w-auto min-w-[280px]">
+        <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
+          <span class="text-xs text-amber-300 font-semibold uppercase tracking-wider">FastLEDChecker Live Kalasin Data</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div>
+            <span class="text-slate-400">ทรัพย์บังคับคดีกาฬสินธุ์:</span>
+            <p class="text-lg font-bold text-amber-400">2,619 รายการ</p>
+          </div>
+          <div>
+            <span class="text-slate-400">บ้านไม้เก่ารอรื้อถอน:</span>
+            <p class="text-lg font-bold text-orange-400">45 รายการ</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- TAB 1: Property Catalog & Smart Filter -->
+    <section id="tab-catalog" class="tab-content">
+      
+      <!-- Smart Filter Bar -->
+      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+          🔍 Smart Filter & Search (ค้นหาขั้นสูง 18 อำเภอ กาฬสินธุ์)
+        </h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <!-- Keyword -->
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">คำค้นหา</label>
+            <input type="text" id="searchKeyword" oninput="filterProperties()" placeholder="ชื่อทรัพย์, ชนิดไม้, ตำบล..." class="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+
+          <!-- District -->
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">อำเภอ</label>
+            <select id="districtFilter" onchange="filterProperties()" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              <!-- Dynamic options -->
+            </select>
+          </div>
+
+          <!-- Type -->
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">ประเภททรัพย์สิน</label>
+            <select id="typeFilter" onchange="filterProperties()" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              <option value="all">-- ทุกประเภท --</option>
+              <option value="led_asset">⚡ ทรัพย์บังคับคดี (LED)</option>
+              <option value="wooden_building">🪵 สิ่งปลูกสร้างไม้เก่า</option>
+              <option value="normal_property">🏡 อสังหาริมทรัพย์ทั่วไป</option>
+            </select>
+          </div>
+
+          <!-- Price Range -->
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">ช่วงราคาประมูล/ขาย</label>
+            <select id="priceFilter" onchange="filterProperties()" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              <option value="all">-- ทุกช่วงราคา --</option>
+              <option value="under_500k">ต่ำกว่า 500,000 บาท</option>
+              <option value="500k_1m">500,000 - 1,000,000 บาท</option>
+              <option value="1m_2m">1,000,000 - 2,000,000 บาท</option>
+              <option value="over_2m">มากกว่า 2,000,000 บาท</option>
+            </select>
+          </div>
+
+          <!-- Reset Button -->
+          <div class="flex items-end">
+            <button onclick="document.getElementById('searchKeyword').value=''; document.getElementById('districtFilter').value='all'; document.getElementById('typeFilter').value='all'; document.getElementById('priceFilter').value='all'; filterProperties();" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold p-2.5 rounded-lg border border-slate-300 transition">
+              🔄 ล้างตัวกรอง
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property Grid Container -->
+      <div id="propertyGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- TAB 2: FastLEDChecker Analytics Calculator -->
+    <section id="tab-fastled" class="tab-content hidden">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-amber-500 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
+            ⚡
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">FastLEDChecker - เครื่องมือคำนวณเพดานราคาประมูล (Maximum Bid Calculator)</h3>
+            <p class="text-xs text-slate-500">วิเคราะห์ราคาเสนอประมูลสูงสุดที่ไม่ขาดทุน ป้องกันภาวะ Winner's Curse และคำนวณภาระติดไป</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <!-- Input Form -->
+          <form id="fastLedCalcForm" class="lg:col-span-7 space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">ราคาประมาณการตลาดเสรี (Market Value) (บาท)</label>
+              <input type="number" id="calcMarketVal" value="2500000" step="50000" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-semibold text-slate-900 focus:bg-white focus:outline-none">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">กำไรคาดหวัง / ROI (%)</label>
+                <input type="number" id="calcTargetRoi" value="15" step="1" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">ภาระจำนองติดไป (Mortgage Debt) (บาท)</label>
+                <input type="number" id="calcDebt" value="350000" step="10000" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">ประมาณการค่าฟ้องขับไล่ / ความเสี่ยง (บาท)</label>
+                <input type="number" id="calcEviction" value="80000" step="5000" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">ประมาณการค่าปรับปรุงซ่อมแซม (บาท)</label>
+                <input type="number" id="calcReno" value="200000" step="10000" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              </div>
+            </div>
+
+            <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+              <span>ประมวลผลเพดานราคาประมูล FastLED Engine</span>
+            </button>
+          </form>
+
+          <!-- Output Display & Chart -->
+          <div class="lg:col-span-5 flex flex-col justify-between">
+            <div class="calc-output-card p-6 rounded-2xl shadow-lg border border-slate-800">
+              <h4 class="text-xs uppercase tracking-wider font-bold text-amber-400 mb-4">ผลการวิเคราะห์ FastLEDChecker Result</h4>
+              
+              <div class="mb-4">
+                <span class="text-xs text-slate-400">เพดานราคาเสนอประมูลสูงสุด (Maximum Bid):</span>
+                <p id="outMaxBid" class="text-3xl font-extrabold text-amber-400">฿0</p>
+                <p class="text-xs text-slate-400 mt-1">ส่วนต่างจากราคาตลาด: <span id="outDiscountPercent" class="text-emerald-400 font-bold">0%</span></p>
+              </div>
+
+              <div class="border-t border-slate-800 pt-3 space-y-2 text-xs">
+                <div class="flex justify-between"><span class="text-slate-400">กำไรเป้าหมายที่คาดหวัง:</span> <span id="outTargetProfit" class="font-semibold text-emerald-400">฿0</span></div>
+                <div class="flex justify-between"><span class="text-slate-400">รวมรายการหักลดทั้งหมด:</span> <span id="outDeductions" class="font-semibold text-red-400">฿0</span></div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mt-4">
+              <h5 class="text-xs font-bold text-slate-700 text-center mb-2">สัดส่วนองค์ประกอบโครงสร้างราคาอสังหาฯ</h5>
+              <canvas id="maxBidChart" class="max-h-48"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: Old Wooden Buildings & Wood Valuation -->
+    <section id="tab-wood" class="tab-content hidden">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-amber-900 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
+            🪵
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">Wood Valuation Engine - เครื่องมือประเมินมูลค่าบ้านไม้เก่ากาฬสินธุ์</h3>
+            <p class="text-xs text-slate-500">ประเมินมูลค่าไม้สัก ไม้ประดู่ ไม้เต็ง ไม้แดง ตามปริมาตร สภาพโครงสร้าง และจำนวนเสาเรือนโบราณ</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <form id="woodValuationForm" class="lg:col-span-7 space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">ชนิดไม้หลักของสิ่งปลูกสร้าง</label>
+              <select id="woodTypeSelect" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+                <option value="ไม้สัก (Teak)">ไม้สักทอง (Teak) - ราคาประเมินสูงระดับพรีเมียม</option>
+                <option value="ไม้ประดู่ (Rosewood)">ไม้ประดู่ (Rosewood) - ไม้เนื้อแข็งสีเข้มทรงคุณค่า</option>
+                <option value="ไม้เต็ง (Red Balau)">ไม้เต็ง (Red Balau) - ไม้เนื้อแข็งทนทาน</option>
+                <option value="ไม้แดง (Ironwood)">ไม้แดง (Ironwood) - ทนทานต่อปลวกและสภาพอากาศ</option>
+                <option value="ไม้เนื้อแข็งรวม (Mixed Hardwood)">ไม้เนื้อแข็งรวม (Mixed Hardwood)</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">ปริมาตรไม้ประมาณ (ลูกบาศก์เมตร)</label>
+                <input type="number" id="woodVolumeInput" value="12" step="0.5" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนเสาเรือน (ต้น)</label>
+                <input type="number" id="woodPillarInput" value="16" step="1" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">ความสมบูรณ์เนื้อไม้ (%)</label>
+                <input type="number" id="woodConditionInput" value="85" min="40" max="100" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:bg-white focus:outline-none">
+              </div>
+            </div>
+
+            <button type="submit" class="w-full bg-amber-900 hover:bg-amber-950 text-white font-bold py-3 rounded-xl transition shadow-md">
+              ประมวลผลประเมินมูลค่าสิ่งปลูกสร้างไม้เก่า
+            </button>
+          </form>
+
+          <div class="lg:col-span-5 flex flex-col justify-between">
+            <div class="bg-amber-950 text-white p-6 rounded-2xl shadow-lg border border-amber-900">
+              <h4 class="text-xs uppercase tracking-wider font-bold text-amber-400 mb-4">ผลการประเมินมูลค่าไม้ Wood Valuation Result</h4>
+              
+              <div class="mb-4">
+                <span class="text-xs text-amber-200/70">มูลค่าประเมินราคาสุทธิสิ่งปลูกสร้างไม้:</span>
+                <p id="outWoodValuation" class="text-3xl font-extrabold text-amber-300">฿0</p>
+                <p class="text-xs text-amber-200/70 mt-1">ช่วงราคาเสนอซื้อขายแนะนำ: <span id="outWoodRange" class="font-bold text-white">฿0</span></p>
+              </div>
+
+              <div class="border-t border-amber-900 pt-3 text-xs space-y-2">
+                <div class="flex justify-between"><span class="text-amber-200/70">ประมาณการค่าบริการรื้อถอนและขนย้าย:</span> <span id="outWoodDismantling" class="font-semibold text-amber-300">฿0</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: Leaflet GIS Map Kalasin -->
+    <section id="tab-map" class="tab-content hidden">
+      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold text-slate-900">🗺️ ระบบแผนที่สารสนเทศภูมิศาสตร์ (GIS) อสังหาฯ และบ้านไม้เก่า กาฬสินธุ์ 18 อำเภอ</h3>
+          <div class="flex gap-2 text-xs">
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-600 inline-block"></span> ทรัพย์บังคับคดี</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-900 inline-block"></span> ไม้เก่า</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-sky-600 inline-block"></span> อสังหาฯ ทั่วไป</span>
+          </div>
+        </div>
+        <div id="leaflet-map"></div>
+      </div>
+    </section>
+
+    <!-- TAB 5: Contractors Directory -->
+    <section id="tab-contractors" class="tab-content hidden">
+      <div class="mb-4">
+        <h3 class="text-lg font-bold text-slate-900">🛠️ ทำเนียบช่างรื้อถอนและบริการประกอบบ้านไม้เก่า กาฬสินธุ์</h3>
+        <p class="text-xs text-slate-500">รายชื่อผู้รับเหมาและช่างฝีมือประเมินรื้อถอนที่ผ่านการรับรองมาตรฐานความปลอดภัย</p>
+      </div>
+      <div id="contractorsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Property Detail Modal -->
+  <div id="propertyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+      <div id="modalBodyContent"></div>
+    </div>
+  </div>
+
+  <!-- Comparison Drawer & Modal -->
+  <div id="compareDrawer" class="fixed bottom-4 right-4 z-40 bg-slate-900 text-white p-3 rounded-xl shadow-xl flex items-center gap-3 hidden">
+    <span class="text-xs">รายการเปรียบเทียบ (<span id="compareCount">0</span>/3)</span>
+    <button onclick="openCompareModal()" class="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+      เปิดตารางเปรียบเทียบ
+    </button>
+  </div>
+
+  <div id="compareModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl">
+      <button onclick="closeCompareModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+      <h3 class="text-lg font-bold text-slate-900 mb-4">📊 ตารางเปรียบเทียบทรัพย์สินและสถิติเชิงลึก FastLEDChecker</h3>
+      <div id="compareTableContainer"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-semibold text-slate-200">โครงการพัฒนาเว็บไซต์และแอปพลิเคชันตลาดอสังหาริมทรัพย์ ทรัพย์บังคับคดี และสิ่งปลูกสร้างไม้เก่า จังหวัดกาฬสินธุ์</p>
+        <p class="mt-1 text-slate-500">บูรณาการระบบวิเคราะห์ข้อมูล FastLEDChecker Engine & Digital Wood Marketplace</p>
+      </div>
+      <div class="flex gap-4">
+        <a href="vault/บทที่ 1 บทนำ.md" target="_blank" class="hover:text-orange-400 transition">📄 เอกสารโครงงานบทที่ 1</a>
+        <span>|</span>
+        <span class="text-slate-500">จังหวัดกาฬสินธุ์ 18 อำเภอ</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- App Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/fastled_engine.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>

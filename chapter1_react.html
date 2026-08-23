@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>บทที่ 1 บทนำ (ReactJS) | โครงการพัฒนาเว็บไซต์อสังหาฯ และไม้เก่า กาฬสินธุ์</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React 18 & ReactDOM 18 -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel Standalone for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Google Font Kanit -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap">
+
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .active-tab {
+      background-color: #c25e00;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(194, 94, 0, 0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Chapter 1 Sections Data
+    const CHAPTER_DATA = {
+      title: "บทที่ 1 บทนำ (Introduction)",
+      subtitle: "โครงการพัฒนาเว็บไซต์และแอปพลิเคชันตลาดอสังหาริมทรัพย์ ทรัพย์บังคับคดี และสิ่งปลูกสร้างไม้เก่า จังหวัดกาฬสินธุ์",
+      sections: [
+        {
+          id: "sec1_1",
+          num: "1.1",
+          title: "ที่มาและความสำคัญของโครงงาน",
+          icon: "book-open",
+          summary: "ความเป็นมาของอสังหาริมทรัพย์ ทรัพย์บังคับคดี และบริบทสิ่งปลูกสร้างไม้เก่าในจังหวัดกาฬสินธุ์",
+          content: {
+            intro: "ในปัจจุบัน ตลาดอสังหาริมทรัพย์และการลงทุนในทรัพย์สินจากการขายทอดตลาดของกรมบังคับคดีได้รับความสนใจจากนักลงทุนและประชาชนทั่วไปเป็นอย่างมาก เนื่องจากเป็นช่องทางที่ทำให้สามารถเข้าถึงที่อยู่อาศัย อาคาร และที่ดินในราคาที่ต่ำกว่าราคาประเมินหรือราคาตลาดทั่วไป",
+            painPoints: [
+              {
+                title: "ปัญหาความไม่สมมาตรของสารสนเทศ (Information Asymmetry)",
+                desc: "ข้อมูลทรัพย์สินถูกจัดเก็บอย่างกระจัดกระจาย ขาดการสืบค้นเชิงพื้นที่ GIS และขาดการเชื่อมโยงข้อมูลสภาพทรัพย์สินปัจจุบัน"
+              },
+              {
+                title: "ความซับซ้อนของภาระติดไปและต้นทุนแฝง",
+                desc: "ผู้ประมูลมักเสี่ยงต่อภาระจำนองติดไป ค่าใช้จ่ายในการฟ้องร้องขับไล่ผู้อาศัยเดิม ค่าธรรมเนียมโอน และค่าซ่อมแซม"
+              },
+              {
+                title: "การขาดแคลนเครื่องมือคำนวณราคาประมูลสูงสุด (Maximum Bid)",
+                desc: "ขาดระบบประมวลผลเพดานราคาประมูลที่เหมาะสม ส่งผลให้เกิดภาวะเสนอราคาสูงเกินความคุ้มค่า (Winner's Curse)"
+              }
+            ],
+            kalasinContext: "ในพื้นที่จังหวัดกาฬสินธุ์ มีอัตลักษณ์ทางสถาปัตยกรรมเรือนไม้เก่าทรงคุณค่าจำนวนมาก (ไม้สัก, ไม้ประดู่, ไม้เต็ง, ไม้แดง) ในปัจจุบันมีการรื้อถอนเพื่อสร้างที่อยู่อาศัยใหม่ ตลาดการค้าไม้เก่าเป็น Niche Market ที่มีมูลค่าสูง แต่ยังขาดแพลตฟอร์มกลางดิจิทัลในการประเมินราคาและเชื่อมโยงบริการรื้อถอนตามแนวคิดเศรษฐกิจหมุนเวียน (Circular Economy)",
+            solution: "ผู้จัดทำจึงพัฒนาระบบที่บูรณาการการวิเคราะห์อสังหาริมทรัพย์เชิงลึก (โมเดล FastLEDChecker.com) ร่วมกับระบบ Digital Marketplace สำหรับสิ่งปลูกสร้างไม้เก่า กาฬสินธุ์"
+          }
+        },
+        {
+          id: "sec1_2",
+          num: "1.2",
+          title: "วัตถุประสงค์ของโครงการ",
+          icon: "target",
+          summary: "เป้าหมายหลัก 4 ประการของการพัฒนาระบบ",
+          objectives: [
+            {
+              id: 1,
+              title: "พัฒนาระบบสารสนเทศและแสดงผลเชิงพื้นที่ (GIS)",
+              desc: "เพื่อออกแบบและพัฒนาเว็บไซต์และแอปพลิเคชันสำหรับรวบรวม ค้นหา และแสดงผลข้อมูลอสังหาริมทรัพย์และทรัพย์บังคับคดีในเขตพื้นที่จังหวัดกาฬสินธุ์อย่างเป็นระบบ"
+            },
+            {
+              id: 2,
+              title: "พัฒนาระบบตลาดกลางดิจิทัล (Digital Marketplace)",
+              desc: "เพื่อสร้างแพลตฟอร์มเฉพาะกลุ่มสำหรับประกาศซื้อขาย ประเมินมูลค่าไม้เก่าเบื้องต้น และเชื่อมโยงบริการรื้อถอนสิ่งปลูกสร้างไม้เก่าและวัสดุไม้รีไซเคิล"
+            },
+            {
+              id: 3,
+              title: "สร้างเครื่องมือวิเคราะห์การลงทุน (Financial Analytics)",
+              desc: "เพื่อสร้างเครื่องมือคำนวณเพดานราคาประมูลที่เหมาะสม (Maximum Bid Calculator), การคำนวณต้นทุนแฝง และการประเมินผลตอบแทนจากการลงทุน (ROI)"
+            },
+            {
+              id: 4,
+              title: "สร้างระบบนิเวศดิจิทัล (Digital Ecosystem)",
+              desc: "เพื่ออำนวยความสะดวกและสร้างเครือข่ายการเชื่อมโยงระหว่างผู้ซื้อ ผู้ขาย นักลงทุน ประชาชน และผู้ให้บริการรื้อถอนบ้านไม้ในพื้นที่จังหวัดกาฬสินธุ์"
+            }
+          ]
+        },
+        {
+          id: "sec1_3",
+          num: "1.3",
+          title: "ขอบเขตของโครงการ",
+          icon: "layers",
+          summary: "ขอบเขตด้านพื้นที่ ผู้ใช้งาน ระบบฟังก์ชัน และข้อจำกัด",
+          scopeData: {
+            area: "ครอบคลุมพื้นที่ 18 อำเภอ ในจังหวัดกาฬสินธุ์",
+            roles: [
+              { role: "ผู้ใช้งานทั่วไป (Guest)", rights: "ค้นหาข้อมูล ดูตำแหน่งแผนที่ GIS ใช้งานเครื่องมือคำนวณขั้นพื้นฐาน" },
+              { role: "สมาชิกระดับพรีเมียม / นักลงทุน (Investor)", rights: "เข้าถึง FastLED Analytics เชิงลึก ตรวจสอบภาระติดไป คำนวณ Max Bid แบบปรับแต่ง" },
+              { role: "ผู้ขาย / ผู้รับเหมา (Vendor/Contractor)", rights: "ลงประกาศขายสิ่งปลูกสร้างไม้เก่า ยื่นประเมินราคา และรับงานบริการรื้อถอน" },
+              { role: "ผู้ดูแลระบบ (Admin)", rights: "อนุมัติรายการประกาศ บริหารจัดการสมาชิก และดูแลรักษาความปลอดภัยของฐานข้อมูล" }
+            ],
+            districts: [
+              "เมืองกาฬสินธุ์", "กมลาไสย", "ยางตลาด", "ฆ้องชัย", "ร่องคำ", "สมเด็จ",
+              "กุฉินารายณ์", "ห้วยผึ้ง", "สหัสขันธ์", "คำม่วง", "ท่าคันโท", "หนองกุงศรี",
+              "ห้วยเม็ก", "นาคู", "เขาวง", "นามน", "ดอนจาน", "สามชัย"
+            ]
+          }
+        },
+        {
+          id: "sec1_4",
+          num: "1.4",
+          title: "ผลที่คาดว่าจะได้รับ",
+          icon: "award",
+          summary: "ประโยชน์ที่เกิดแก่ผู้บริโภค สิ่งแวดล้อม และเศรษฐกิจท้องถิ่น",
+          benefits: [
+            { cat: "ด้านผู้บริโภคและนักลงทุน", detail: "มีแพลตฟอร์มศูนย์รวมข้อมูลที่เข้าถึงง่าย ลดความเสี่ยงและความซับซ้อนในการตัดสินใจประมูลทรัพย์" },
+            { cat: "ด้านสิ่งแวดล้อมและไม้เก่า", detail: "เกิดศูนย์กลางตลาดซื้อขายและประเมินมูลค่าไม้เก่า ส่งเสริมแนวคิดเศรษฐกิจหมุนเวียน (Circular Economy)" },
+            { cat: "ด้านเทคโนโลยีและวิชาการ", detail: "ได้ต้นแบบนวัตกรรมสารสนเทศเชิงพื้นที่ (GIS) และโมเดลอัลกอริทึมประเมินมูลค่าไม้เก่า" },
+            { cat: "ด้านเศรษฐกิจระดับท้องถิ่น", detail: "กระตุ้นเศรษฐกิจในจังหวัดกาฬสินธุ์ ผ่านการเชื่อมโยงผู้ซื้อ ผู้ขาย และผู้รับเหมารื้อถอนในพื้นที่" }
+          ]
+        },
+        {
+          id: "sec1_5",
+          num: "1.5",
+          title: "เครื่องมือและเทคโนโลยีที่ใช้ในการดำเนินงาน",
+          icon: "cpu",
+          summary: "โครงสร้างสถาปัตยกรรมเทคโนโลยีสารสนเทศ (Tech Stack)",
+          techStack: [
+            { category: "UI/UX Design", name: "Figma / Adobe XD", desc: "ออกแบบ Wireframe และ User Interface Prototype" },
+            { category: "Frontend Stack", name: "React.js / Next.js, Tailwind CSS, Leaflet.js", desc: "พัฒนา Responsive Web & GIS Interactive Map" },
+            { category: "Backend Stack", name: "Node.js (Express.js) / Python (FastAPI)", desc: "พัฒนา RESTful APIs และ Business Logic" },
+            { category: "Database & Caching", name: "PostgreSQL + PostGIS, MongoDB, Redis", desc: "จัดเก็บข้อมูลเชิงสัมพันธ์ ข้อมูล GIS และทำ Caching" },
+            { category: "Data Scraping", name: "Python (BeautifulSoup, Selenium, Pandas)", desc: "กระบวนการดึงและประมวลผลข้อมูลทรัพย์บังคับคดี" },
+            { category: "DevOps & Cloud", name: "Docker, Git, GitHub/GitLab, Ubuntu VPS", desc: "บริหารซอร์สโค้ดและ Containerization Deployment" }
+          ]
+        }
+      ]
+    };
+
+    // Main React Component
+    function Chapter1App() {
+      const [activeTab, setActiveTab] = useState("sec1_1");
+      const [searchQuery, setSearchQuery] = useState("");
+
+      const currentSection = CHAPTER_DATA.sections.find(s => s.id === activeTab);
+
+      return (
+        <div className="min-h-screen flex flex-col">
+          {/* Header */}
+          <header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center font-bold text-xl shadow">
+                  1
+                </div>
+                <div>
+                  <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white leading-tight">
+                    {CHAPTER_DATA.title}
+                  </h1>
+                  <p className="text-xs text-orange-400 font-medium">
+                    {CHAPTER_DATA.subtitle}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <a href="index.html" className="bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-1 shadow">
+                  <span>🌐 กลับสู่แอปพลิเคชันตลาดอสังหาฯ</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Navigation Tabs */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 overflow-x-auto pb-3 pt-1">
+              {CHAPTER_DATA.sections.map(sec => (
+                <button
+                  key={sec.id}
+                  onClick={() => setActiveTab(sec.id)}
+                  className={`px-3.5 py-2 rounded-lg text-xs font-medium transition flex items-center gap-2 whitespace-nowrap ${
+                    activeTab === sec.id ? 'active-tab' : 'bg-slate-800/80 text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  <span className="font-bold">{sec.num}</span>
+                  <span>{sec.title}</span>
+                </button>
+              ))}
+            </div>
+          </header>
+
+          {/* Banner */}
+          <section className="bg-gradient-to-r from-orange-950 via-slate-900 to-amber-950 text-white py-6 px-4 sm:px-6 lg:px-8 border-b border-orange-900/30">
+            <div className="max-w-7xl mx-auto">
+              <span class="inline-block bg-orange-500/20 text-orange-300 text-xs px-3 py-1 rounded-full font-medium border border-orange-500/30 mb-2">
+                เอกสารบทนำและเค้าโครงโครงงานวิทยานิพนธ์ (React Dashboard View)
+              </span>
+              <h2 className="text-xl sm:text-2xl font-bold">
+                {currentSection.num} {currentSection.title}
+              </h2>
+              <p className="text-xs text-slate-300 mt-1">
+                {currentSection.summary}
+              </p>
+            </div>
+          </section>
+
+          {/* Main Content Area */}
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+            {/* Section 1.1 */}
+            {activeTab === "sec1_1" && (
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                  <h3 className="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+                    <span className="w-2 h-5 bg-orange-600 rounded"></span>
+                    1.1.1 บริบทและความสำคัญของอสังหาริมทรัพย์และทรัพย์บังคับคดี
+                  </h3>
+                  <p className="text-sm text-slate-700 leading-relaxed mb-4">
+                    {currentSection.content.intro}
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    {currentSection.content.painPoints.map((item, idx) => (
+                      <div key={idx} className="bg-orange-50/60 p-4 rounded-xl border border-orange-200/60">
+                        <span className="text-xs font-bold text-orange-700 bg-orange-100 px-2 py-0.5 rounded inline-block mb-2">
+                          Pain Point #{idx+1}
+                        </span>
+                        <h4 className="font-bold text-slate-900 text-sm mb-1">{item.title}</h4>
+                        <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                  <h3 className="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+                    <span className="w-2 h-5 bg-amber-700 rounded"></span>
+                    1.1.2 บริบทสิ่งปลูกสร้างไม้เก่า จังหวัดกาฬสินธุ์ & เศรษฐกิจหมุนเวียน
+                  </h3>
+                  <p className="text-sm text-slate-700 leading-relaxed bg-amber-50/50 p-4 rounded-xl border border-amber-200/50 mb-4">
+                    {currentSection.content.kalasinContext}
+                  </p>
+                  <div className="bg-slate-900 text-white p-4 rounded-xl">
+                    <span class="text-xs text-orange-400 font-bold uppercase tracking-wider">แนวทางแก้ไขปัญหาและโมเดลบูรณาการ:</span>
+                    <p className="text-xs text-slate-300 mt-1">{currentSection.content.solution}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Section 1.2 */}
+            {activeTab === "sec1_2" && (
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                  <h3 className="text-base font-bold text-slate-900 mb-4">
+                    วัตถุประสงค์หลักของโครงการ 4 ประการ
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {currentSection.objectives.map(obj => (
+                      <div key={obj.id} className="bg-slate-50 p-5 rounded-xl border border-slate-200 flex gap-4">
+                        <div className="w-10 h-10 bg-orange-600 text-white font-extrabold text-lg rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+                          {obj.id}
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-slate-900 text-sm mb-1">{obj.title}</h4>
+                          <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Section 1.3 */}
+            {activeTab === "sec1_3" && (
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                  <h3 className="text-base font-bold text-slate-900 mb-3">
+                    ขอบเขตด้านสิทธิ์ผู้ใช้งาน (User Roles Access Control)
+                  </h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs text-left border-collapse">
+                      <thead>
+                        <tr className="bg-slate-100 border-b border-slate-200">
+                          <th className="p-3 font-bold text-slate-700">กลุ่มผู้ใช้งาน (User Role)</th>
+                          <th className="p-3 font-bold text-slate-700">ขอบเขตสิทธิ์การใช้งานและฟังก์ชัน</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {currentSection.scopeData.roles.map((r, idx) => (
+                          <tr key={idx} className="hover:bg-slate-50">
+                            <td className="p-3 font-semibold text-slate-900 whitespace-nowrap">{r.role}</td>
+                            <td className="p-3 text-slate-600">{r.rights}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                  <h3 className="text-base font-bold text-slate-900 mb-3">
+                    ขอบเขตพื้นที่ 18 อำเภอ ในจังหวัดกาฬสินธุ์
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {currentSection.scopeData.districts.map((d, idx) => (
+                      <span key={idx} className="bg-orange-50 text-orange-800 text-xs px-3 py-1.5 rounded-lg border border-orange-200 font-medium">
+                        📍 อ.{d}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Section 1.4 */}
+            {activeTab === "sec1_4" && (
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h3 className="text-base font-bold text-slate-900 mb-4">
+                  ผลประโยชน์ที่คาดว่าจะได้รับจำแนกตามมิติ
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {currentSection.benefits.map((b, idx) => (
+                    <div key={idx} className="bg-emerald-50/60 p-5 rounded-xl border border-emerald-200/60">
+                      <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded inline-block mb-2">
+                        {b.cat}
+                      </span>
+                      <p className="text-xs text-slate-700 leading-relaxed font-medium">{b.detail}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Section 1.5 */}
+            {activeTab === "sec1_5" && (
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h3 className="text-base font-bold text-slate-900 mb-4">
+                  สถาปัตยกรรมเทคโนโลยีที่ใช้ในการดำเนินงาน (Technology Stack)
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {currentSection.techStack.map((tech, idx) => (
+                    <div key={idx} className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                      <span className="text-[10px] uppercase font-extrabold text-orange-600 tracking-wider">
+                        {tech.category}
+                      </span>
+                      <h4 className="font-bold text-slate-900 text-sm my-1">{tech.name}</h4>
+                      <p className="text-xs text-slate-600">{tech.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+          </main>
+
+          {/* Footer */}
+          <footer className="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <p className="font-semibold text-slate-300">เอกสารบทที่ 1 บทนำ - พัฒนาด้วย ReactJS 18 & Tailwind CSS</p>
+              <p className="mt-1 text-slate-500">โครงการพัฒนาเว็บไซต์และแอปพลิเคชันตลาดอสังหาริมทรัพย์ ทรัพย์บังคับคดี และสิ่งปลูกสร้างไม้เก่า จังหวัดกาฬสินธุ์</p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    // Render React App
+    const rootElement = document.getElementById("root");
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(<Chapter1App />);
+  </script>
+</body>
+</html>

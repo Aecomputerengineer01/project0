@@ -1,0 +1,147 @@
+/* Custom Styles for Kalasin Real Estate, LED Assets & Old Wooden Buildings Marketplace */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #c25e00;       /* กาฬสินธุ์ ออร์แกนิก / สีอิฐเผา */
+  --primary-hover: #9c4b00;
+  --secondary: #2d6a4f;     /* เขียวขจี / อนุรักษ์ธรรมชาติ */
+  --wood: #8b5a2b;          /* สีไม้เก่าทรงคุณค่า */
+  --wood-light: #f4ece1;
+  --led-amber: #d97706;     /* สีทองทรัพย์บังคับคดี */
+  --dark-slate: #1e293b;
+  --light-bg: #f8fafc;
+}
+
+body {
+  font-family: 'Kanit', sans-serif;
+  background-color: var(--light-bg);
+  color: var(--dark-slate);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Custom Glassmorphism Header */
+.glass-header {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Badge Styles */
+.badge-led {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.badge-wood {
+  background-color: #f5ebe0;
+  color: #6b3e26;
+  border: 1px solid #e6ccb2;
+}
+
+.badge-normal {
+  background-color: #e0f2fe;
+  color: #075985;
+  border: 1px solid #bae6fd;
+}
+
+/* Property Card Effects */
+.property-card {
+  transition: all 0.25s ease-in-out;
+}
+.property-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.12);
+}
+
+/* Leaflet Map Customization */
+#leaflet-map {
+  height: 480px;
+  width: 100%;
+  border-radius: 0.75rem;
+  z-index: 10;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.5rem;
+  font-family: 'Kanit', sans-serif;
+}
+
+/* Tab Navigation */
+.nav-tab {
+  position: relative;
+  transition: color 0.2s ease;
+}
+.nav-tab.active {
+  color: var(--primary);
+  font-weight: 600;
+}
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--primary);
+  border-radius: 3px 3px 0 0;
+}
+
+/* FastLEDChecker Output Box */
+.calc-output-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #ffffff;
+}
+
+/* Custom Checkbox Slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #cbd5e1;
+  transition: .3s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: var(--primary);
+}
+input:checked + .slider:before {
+  transform: translateX(20px);
+}

@@ -1,0 +1,6 @@
+# Git Ignore Rules for Web Application & Vault
+.system_generated/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
