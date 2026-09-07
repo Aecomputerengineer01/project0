@@ -293,17 +293,66 @@ function renderPropertyList(properties) {
   }).join("");
 }
 
+/* Sub-district dropdown handling when District changes */
+function onDistrictChange() {
+  const districtVal = document.getElementById("districtFilter") ? document.getElementById("districtFilter").value : "all";
+  const subdistrictSelect = document.getElementById("subdistrictFilter");
+  
+  if (subdistrictSelect) {
+    subdistrictSelect.innerHTML = '<option value="all">-- ทุกตำบล --</option>';
+    if (districtVal !== "all" && typeof KALASIN_SUBDISTRICTS !== "undefined" && KALASIN_SUBDISTRICTS[districtVal]) {
+      KALASIN_SUBDISTRICTS[districtVal].forEach(sub => {
+        subdistrictSelect.innerHTML += `<option value="${sub}">ต.${sub}</option>`;
+      });
+    }
+  }
+  filterProperties();
+}
+
+/* Reset All Filters */
+function resetFilters() {
+  const keywordInput = document.getElementById("searchKeyword");
+  const districtSelect = document.getElementById("districtFilter");
+  const subdistrictSelect = document.getElementById("subdistrictFilter");
+  const typeSelect = document.getElementById("typeFilter");
+  const priceSelect = document.getElementById("priceFilter");
+
+  if (keywordInput) keywordInput.value = "";
+  if (districtSelect) districtSelect.value = "all";
+  if (subdistrictSelect) subdistrictSelect.innerHTML = '<option value="all">-- ทุกตำบล --</option>';
+  if (typeSelect) typeSelect.value = "all";
+  if (priceSelect) priceSelect.value = "all";
+
+  filterProperties();
+}
+
 /* Filter Function */
 function filterProperties() {
-  const districtVal = document.getElementById("districtFilter").value;
-  const typeVal = document.getElementById("typeFilter").value;
-  const priceVal = document.getElementById("priceFilter").value;
-  const searchKeyword = document.getElementById("searchKeyword").value.trim().toLowerCase();
+  const districtVal = document.getElementById("districtFilter") ? document.getElementById("districtFilter").value : "all";
+  const subdistrictVal = document.getElementById("subdistrictFilter") ? document.getElementById("subdistrictFilter").value : "all";
+  const typeVal = document.getElementById("typeFilter") ? document.getElementById("typeFilter").value : "all";
+  const priceVal = document.getElementById("priceFilter") ? document.getElementById("priceFilter").value : "all";
+  const searchKeyword = document.getElementById("searchKeyword") ? document.getElementById("searchKeyword").value.trim().toLowerCase() : "";
 
   let filtered = PROPERTIES_DATA.filter(item => {
+    // District Filter
     if (districtVal !== "all" && item.district !== districtVal) return false;
-    if (typeVal !== "all" && item.type !== typeVal) return false;
+
+    // Sub-district Filter
+    if (subdistrictVal !== "all" && item.subdistrict !== subdistrictVal) return false;
     
+    // Type Filter
+    if (typeVal !== "all") {
+      if (typeVal === "has_structure") {
+        const hasStruct = item.hasExistingStructure === true || 
+                          (item.assetCategory && (item.assetCategory.includes("สิ่งปลูกสร้าง") || item.assetCategory.includes("บ้าน")));
+        if (!hasStruct) return false;
+      } else if (item.type !== typeVal) {
+        return false;
+      }
+    }
+    
+    // Price Range Filter
     if (priceVal !== "all") {
       const price = item.priceStarting;
       if (priceVal === "under_500k" && price > 500000) return false;
@@ -312,11 +361,16 @@ function filterProperties() {
       if (priceVal === "over_2m" && price < 2000000) return false;
     }
 
+    // Keyword Search
     if (searchKeyword) {
-      const matchTitle = item.title.toLowerCase().includes(searchKeyword);
-      const matchAddress = item.address.toLowerCase().includes(searchKeyword);
-      const matchWood = item.woodType ? item.woodType.toLowerCase().includes(searchKeyword) : false;
-      if (!matchTitle && !matchAddress && !matchWood) return false;
+      const matchTitle = item.title ? item.title.toLowerCase().includes(searchKeyword) : false;
+      const matchAddress = item.address ? item.address.toLowerCase().includes(searchKeyword) : false;
+      const matchDistrict = item.district ? item.district.toLowerCase().includes(searchKeyword) : false;
+      const matchSubdistrict = item.subdistrict ? item.subdistrict.toLowerCase().includes(searchKeyword) : false;
+      const matchCase = item.ledCaseNo ? item.ledCaseNo.toLowerCase().includes(searchKeyword) : false;
+      const matchDeed = item.deedNo ? item.deedNo.toLowerCase().includes(searchKeyword) : false;
+      const matchWood = item.woodDetails?.woodType ? item.woodDetails.woodType.toLowerCase().includes(searchKeyword) : false;
+      if (!matchTitle && !matchAddress && !matchDistrict && !matchSubdistrict && !matchCase && !matchDeed && !matchWood) return false;
     }
 
     return true;
