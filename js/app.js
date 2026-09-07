@@ -214,20 +214,35 @@ function renderPropertyList(properties) {
               </div>
             ` : ''}
 
-            ${isWood ? `
+            ${item.woodDetails ? `
+              <div class="bg-amber-900/5 rounded-lg p-2.5 mb-3 text-xs border border-amber-800/10">
+                <div class="flex justify-between text-gray-700 mb-1">
+                  <span>โครงสร้างไม้เก่า:</span>
+                  <span class="font-semibold text-amber-900">${item.woodDetails.woodType}</span>
+                </div>
+                <div class="flex justify-between text-gray-700">
+                  <span>ปริมาตรไม้ / เสา:</span>
+                  <span class="font-semibold">${item.woodDetails.woodVolumeCubicM} ลบ.ม. (${item.woodDetails.woodPillars} เสา)</span>
+                </div>
+                <div class="flex justify-between text-emerald-700 font-semibold pt-1 border-t border-amber-800/10 mt-1">
+                  <span>ประเมินมูลค่าไม้เก่า:</span>
+                  <span>฿${item.woodDetails.woodValueEstimate.toLocaleString()}</span>
+                </div>
+              </div>
+            ` : (isWood ? `
               <div class="bg-amber-900/5 rounded-lg p-2.5 mb-3 text-xs border border-amber-800/10">
                 <div class="flex justify-between text-gray-700 mb-1">
                   <span>ประเภทไม้หลัก:</span>
-                  <span class="font-semibold text-amber-900">${item.woodType}</span>
+                  <span class="font-semibold text-amber-900">${item.woodType || 'ไม้เนื้อแข็ง'}</span>
                 </div>
                 <div class="flex justify-between text-gray-700">
                   <span>ปริมาตรไม้ประมาณ:</span>
-                  <span class="font-semibold">${item.woodVolumeCuM} ลบ.ม. (${item.pillarCount} เสา)</span>
+                  <span class="font-semibold">${item.woodVolumeCuM || 0} ลบ.ม.</span>
                 </div>
               </div>
-            ` : ''}
+            ` : '')}
 
-            ${!isLed && !isWood ? `
+            ${!isLed && !isWood && !item.woodDetails ? `
               <div class="mb-3">
                 <span class="text-xs text-gray-500">ราคาเสนอขาย</span>
                 <p class="text-xl font-bold text-orange-600">฿${item.priceStarting.toLocaleString()}</p>
@@ -465,16 +480,30 @@ function openPropertyDetailModal(propertyId) {
         <h2 class="text-xl font-bold text-gray-900 leading-tight mb-2">${item.title}</h2>
         <p class="text-xs text-gray-500 mb-4"><i class="lucide-map-pin"></i> ${item.address}</p>
 
-        <div class="bg-gray-50 p-3 rounded-xl mb-4 text-sm space-y-1.5 border border-gray-200">
-          <div class="flex justify-between"><span class="text-gray-600">ราคาเปิดประมูล / ขาย:</span> <span class="font-bold text-orange-600 text-base">฿${item.priceStarting.toLocaleString()}</span></div>
-          <div class="flex justify-between text-xs text-gray-500"><span>ราคาประเมิน/ตลาด:</span> <span>฿${(item.marketEstimate || item.priceAppraised).toLocaleString()}</span></div>
-          ${item.mortgageDebt ? `<div class="flex justify-between text-xs text-red-600 font-semibold"><span>ภาระจำนองติดไป:</span> <span>฿${item.mortgageDebt.toLocaleString()}</span></div>` : ''}
+        <div class="bg-gray-50 p-3.5 rounded-xl mb-3 text-sm space-y-1.5 border border-gray-200">
+          <div class="flex justify-between"><span class="text-gray-600">ราคาเปิดประมูล / เริ่มต้น:</span> <span class="font-bold text-orange-600 text-base">฿${item.priceStarting.toLocaleString()}</span></div>
+          <div class="flex justify-between text-xs text-gray-500"><span>ราคาประเมินเจ้าพนักงาน:</span> <span>฿${(item.priceAppraised || item.priceStarting).toLocaleString()}</span></div>
+          ${item.mortgageDebt ? `<div class="flex justify-between text-xs text-red-600 font-semibold border-t border-gray-200 pt-1"><span>🚩 ภาระจำนองติดไป:</span> <span>+฿${item.mortgageDebt.toLocaleString()}</span></div>
+          <div class="flex justify-between text-xs text-slate-900 font-bold border-t border-gray-200 pt-1"><span>💰 ยอดจ่ายจริง (เคาะ+จำนอง):</span> <span class="text-red-600">฿${(item.realTotalPayment || (item.priceStarting + item.mortgageDebt)).toLocaleString()}</span></div>` : '<div class="flex justify-between text-xs text-emerald-600 font-semibold"><span>สถานะทางกฎหมาย:</span> <span>✓ ปลอดภาระผูกพัน / ปลอดจำนอง</span></div>'}
+          <div class="flex justify-between text-xs text-gray-500 pt-1 border-t border-gray-200"><span>หลักประกันเข้าประมูล:</span> <span class="font-semibold text-gray-800">฿${(item.reserveFund || 50000).toLocaleString()} บาท</span></div>
+          <div class="flex justify-between text-xs text-gray-500"><span>เลขโฉนด / ระวาง:</span> <span class="font-semibold text-gray-800">${item.deedNo || 'ตามระวางศาล'}</span></div>
+          <div class="flex justify-between text-xs text-gray-500"><span>สถานที่จัดประมูล:</span> <span class="text-right text-gray-700">${item.saleLocation || 'สำนักงานบังคับคดีจังหวัดกาฬสินธุ์'}</span></div>
         </div>
+
+        ${item.woodDetails ? `
+          <div class="bg-amber-950/10 p-3.5 rounded-xl mb-3 border border-amber-800/20 text-xs space-y-1">
+            <h4 class="font-bold text-amber-900 text-sm mb-1">🪵 ข้อมูลการประเมินเนื้อไม้สิ่งปลูกสร้าง</h4>
+            <div class="flex justify-between"><span>ประเภทไม้หลัก:</span> <span class="font-bold text-amber-900">${item.woodDetails.woodType}</span></div>
+            <div class="flex justify-between"><span>ปริมาตรไม้ / จำนวนเสา:</span> <span>${item.woodDetails.woodVolumeCubicM} ลบ.ม. (${item.woodDetails.woodPillars} เสา)</span></div>
+            <div class="flex justify-between"><span>สภาพความสมบูรณ์:</span> <span>${item.woodDetails.woodConditionPercent}%</span></div>
+            <div class="flex justify-between font-bold text-emerald-700 pt-1 border-t border-amber-800/10"><span>มูลค่าไม้ประเมินสุทธิ:</span> <span>฿${item.woodDetails.woodValueEstimate.toLocaleString()} บาท</span></div>
+          </div>
+        ` : ''}
 
         <div class="calc-output-card p-4 rounded-xl mb-4">
           <div class="flex items-center justify-between mb-2">
             <h4 class="font-bold text-xs uppercase tracking-wider text-amber-400">FastLEDChecker Analytics Summary</h4>
-            ${item.dataSourceUrl ? `<a href="${item.dataSourceUrl}" target="_blank" class="text-[11px] text-amber-300 underline font-medium">🔗 อ้างอิง FastLEDChecker.com</a>` : ''}
+            ${item.dataSourceUrl ? `<a href="${item.dataSourceUrl}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-amber-300 underline font-medium hover:text-white">🔗 ดูต้นทาง FastLEDChecker ↗</a>` : ''}
           </div>
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div>
@@ -488,15 +517,21 @@ function openPropertyDetailModal(propertyId) {
           </div>
           <div class="mt-2 pt-2 border-t border-slate-700/60 text-[11px] text-slate-300 flex justify-between">
             <span>คดีหมายเลข: ${item.ledCaseNo || 'N/A'}</span>
-            <span>รูปภาพ: asset.led.go.th</span>
+            <span>ศาล: ${item.ledCourt || 'ศาลจังหวัดกาฬสินธุ์'}</span>
           </div>
         </div>
 
         <div class="flex gap-2">
-          <a href="tel:${item.contactPhone}" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white text-center py-2.5 px-4 rounded-xl text-sm font-semibold transition">
-            📞 ติดต่อ ${item.contactName}
-          </a>
-          <button onclick="toggleCompareProperty('${item.id}')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-semibold rounded-xl transition">
+          ${item.dataSourceUrl ? `
+            <a href="${item.dataSourceUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-center py-2.5 px-4 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1">
+              <span>🌐 เปิดดูบน FastLEDChecker</span>
+            </a>
+          ` : `
+            <a href="tel:043811481" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white text-center py-2.5 px-4 rounded-xl text-xs font-semibold transition">
+              📞 บังคับคดีกาฬสินธุ์ (043-811481)
+            </a>
+          `}
+          <button onclick="toggleCompareProperty('${item.id}')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-semibold rounded-xl transition">
             + เปรียบเทียบ
           </button>
         </div>
