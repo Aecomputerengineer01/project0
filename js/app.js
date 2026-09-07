@@ -10,6 +10,7 @@ let compareList = [];
 let currentRole = "investor"; // guest, investor, vendor, admin
 
 document.addEventListener("DOMContentLoaded", () => {
+  loadStoredUserWoodListings();
   initRoleSwitcher();
   initDistrictDropdown();
   initMap();
@@ -20,6 +21,26 @@ document.addEventListener("DOMContentLoaded", () => {
   setupWoodValuationForm();
   setupCompareSystem();
 });
+
+/* Load User Stored Wood Listings from localStorage */
+function loadStoredUserWoodListings() {
+  try {
+    const raw = localStorage.getItem("KALASIN_USER_WOOD_LISTINGS");
+    if (raw) {
+      const stored = JSON.parse(raw);
+      if (Array.isArray(stored) && stored.length > 0) {
+        // Prepend user listings to PROPERTIES_DATA
+        stored.forEach(item => {
+          if (!PROPERTIES_DATA.some(p => p.id === item.id)) {
+            PROPERTIES_DATA.unshift(item);
+          }
+        });
+      }
+    }
+  } catch (e) {
+    console.error("Error loading user wood listings:", e);
+  }
+}
 
 /* Role Switcher */
 function initRoleSwitcher() {
@@ -53,6 +74,14 @@ function initDistrictDropdown() {
     districtFilter.innerHTML = `<option value="all">-- ทุกอำเภอ (18 อำเภอ) --</option>`;
     KALASIN_DISTRICTS.forEach(d => {
       districtFilter.innerHTML += `<option value="${d}">${d}</option>`;
+    });
+  }
+
+  const subDistrict = document.getElementById("subDistrict");
+  if (subDistrict) {
+    subDistrict.innerHTML = `<option value="" disabled selected>-- เลือกอำเภอ (18 อำเภอ) --</option>`;
+    KALASIN_DISTRICTS.forEach(d => {
+      subDistrict.innerHTML += `<option value="${d}">${d}</option>`;
     });
   }
 }
@@ -628,4 +657,220 @@ function openCompareModal() {
 
 function closeCompareModal() {
   document.getElementById("compareModal").classList.add("hidden");
+}
+
+/* ============================================================
+   WOOD HOUSE SUBMISSION & VALUATION SYSTEM (กาฬสินธุ์ 18 อำเภอ)
+   ============================================================ */
+
+let submissionCustomImageBase64 = null;
+let lastCalculatedWoodValuation = 0;
+
+// Coordinates for all 18 districts in Kalasin
+const KALASIN_DISTRICT_COORDS = {
+  "เมืองกาฬสินธุ์": [16.4322, 103.5061],
+  "กมลาไสย": [16.3385, 103.5752],
+  "ยางตลาด": [16.4012, 103.3556],
+  "ฆ้องชัย": [16.2750, 103.4500],
+  "ร่องคำ": [16.2890, 103.7420],
+  "สมเด็จ": [16.6980, 103.7740],
+  "กุฉินารายณ์": [16.5410, 104.0520],
+  "ห้วยผึ้ง": [16.5910, 103.9050],
+  "สหัสขันธ์": [16.7150, 103.5200],
+  "คำม่วง": [16.9280, 103.6350],
+  "ท่าคันโท": [16.9450, 103.2420],
+  "หนองกุงศรี": [16.6520, 103.3050],
+  "ห้วยเม็ก": [16.5910, 103.2270],
+  "นาคู": [16.7322, 104.0561],
+  "เขาวง": [16.7020, 104.0900],
+  "นามน": [16.5650, 103.7900],
+  "ดอนจาน": [16.5820, 103.6200],
+  "สามชัย": [16.8250, 103.5250]
+};
+
+function openWoodSubmissionModal() {
+  const modal = document.getElementById("woodSubmissionModal");
+  if (modal) {
+    modal.classList.remove("hidden");
+    updateSubmissionWoodValuation();
+  }
+}
+
+function closeWoodSubmissionModal() {
+  const modal = document.getElementById("woodSubmissionModal");
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+
+function updateSubmissionWoodValuation() {
+  const woodType = document.getElementById("subWoodType")?.value || "ไม้สัก (Teak)";
+  const volume = parseFloat(document.getElementById("subVolume")?.value) || 20;
+  const pillars = parseInt(document.getElementById("subPillars")?.value) || 16;
+  const condition = parseFloat(document.getElementById("subCondition")?.value) || 88;
+
+  const result = FastLEDCheckerEngine.calculateWoodValuation({
+    woodType: woodType,
+    woodVolumeCuM: volume,
+    pillarCount: pillars,
+    conditionPercent: condition
+  });
+
+  lastCalculatedWoodValuation = result.netEstimatedValue;
+
+  const liveValuation = document.getElementById("subLiveValuation");
+  const liveRange = document.getElementById("subLiveRange");
+
+  if (liveValuation) liveValuation.innerText = "฿" + result.netEstimatedValue.toLocaleString();
+  if (liveRange) liveRange.innerText = `฿${result.recommendedPriceMin.toLocaleString()} - ฿${result.recommendedPriceMax.toLocaleString()}`;
+}
+
+function applySuggestedWoodPrice() {
+  const priceInput = document.getElementById("subPrice");
+  if (priceInput && lastCalculatedWoodValuation > 0) {
+    const suggested = Math.round(lastCalculatedWoodValuation * 0.9 / 1000) * 1000;
+    priceInput.value = suggested;
+  }
+}
+
+function previewSubmissionImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    submissionCustomImageBase64 = e.target.result;
+    const previewBox = document.getElementById("subImagePreviewBox");
+    const previewImg = document.getElementById("subImagePreview");
+    if (previewBox && previewImg) {
+      previewImg.src = submissionCustomImageBase64;
+      previewBox.classList.remove("hidden");
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleWoodSubmission(event) {
+  event.preventDefault();
+
+  const title = document.getElementById("subTitle").value.trim();
+  const district = document.getElementById("subDistrict").value;
+  const subdistrict = document.getElementById("subSubdistrict").value.trim();
+  const category = document.getElementById("subCategory").value;
+  const woodType = document.getElementById("subWoodType").value;
+  const saleType = document.getElementById("subSaleType").value;
+  const volume = parseFloat(document.getElementById("subVolume").value) || 20;
+  const pillars = parseInt(document.getElementById("subPillars").value) || 16;
+  const condition = parseFloat(document.getElementById("subCondition").value) || 88;
+  const price = parseInt(document.getElementById("subPrice").value) || 250000;
+  const imageUrlInput = document.getElementById("subImageUrl").value.trim();
+  const contactName = document.getElementById("subContactName").value.trim();
+  const contactPhone = document.getElementById("subContactPhone").value.trim();
+  const featuresText = document.getElementById("subFeatures")?.value.trim() || "";
+
+  if (!district) {
+    alert("กรุณาเลือกอำเภอในจังหวัดกาฬสินธุ์");
+    return;
+  }
+
+  let finalImage = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80";
+  if (submissionCustomImageBase64) {
+    finalImage = submissionCustomImageBase64;
+  } else if (imageUrlInput) {
+    finalImage = imageUrlInput;
+  }
+
+  const coords = KALASIN_DISTRICT_COORDS[district] || [16.4322, 103.5061];
+  const jitterLat = Number((coords[0] + (Math.random() - 0.5) * 0.025).toFixed(5));
+  const jitterLng = Number((coords[1] + (Math.random() - 0.5) * 0.025).toFixed(5));
+
+  const newId = `KLS-WOOD-USER-${Date.now()}`;
+  const woodEstimate = lastCalculatedWoodValuation || Math.round(volume * 32000 * (condition / 100));
+
+  const features = [
+    `⭐ ${woodType} แท้ (${pillars} เสา)`,
+    `สภาพเนื้อไม้สมบูรณ์ ${condition}%`,
+    `รูปแบบ: ${saleType}`,
+    `ผู้ลงประกาศ: ${contactName} (${contactPhone})`
+  ];
+  if (featuresText) {
+    features.unshift(featuresText);
+  }
+
+  const newProperty = {
+    id: newId,
+    title: `${title} ต.${subdistrict} อ.${district} จ.กาฬสินธุ์`,
+    type: "wooden_building",
+    assetCategory: category,
+    district: district,
+    subdistrict: subdistrict,
+    address: `${subdistrict} อ.${district} จ.กาฬสินธุ์`,
+    deedNo: "กรรมสิทธิ์สิ่งปลูกสร้างไม้เก่า (ลงประกาศผ่านเว็บ)",
+    priceStarting: price,
+    priceAppraised: woodEstimate,
+    marketEstimate: Math.round(woodEstimate * 1.15),
+    mortgageDebt: 0,
+    realTotalPayment: price,
+    auctionDate: "พร้อมขายรื้อถอน / ส่งมอบทันที",
+    competitorStatus: "✨ เพิ่งลงประกาศใหม่",
+    isMortgageAttached: false,
+    evictionRisk: "none",
+    evictionCostEst: 0,
+    renovationCostEst: 40000,
+    areaSqW: 100,
+    usableAreaSqM: Math.round(volume * 5.5),
+    lat: jitterLat,
+    lng: jitterLng,
+    status: `พร้อมขาย | ${saleType} | ราคา ฿${price.toLocaleString()}`,
+    ledCourt: "ผู้ถือกรรมสิทธิ์สิ่งปลูกสร้างไม้เก่า",
+    ledCaseNo: "OWNER-DIRECT",
+    reserveFund: Math.round(price * 0.1),
+    saleLocation: `ต.${subdistrict} อ.${district} จ.กาฬสินธุ์`,
+    dataSourceUrl: "",
+    contactName: contactName,
+    contactPhone: contactPhone,
+    woodDetails: {
+      woodType: woodType,
+      woodVolumeCubicM: volume,
+      woodPillars: pillars,
+      woodConditionPercent: condition,
+      woodValueEstimate: woodEstimate,
+      salvageFeasibility: "ผ่านการประเมินราคา Wood Engine เรียบร้อย"
+    },
+    images: [
+      finalImage,
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
+    ],
+    features: features,
+    isUserSubmitted: true
+  };
+
+  PROPERTIES_DATA.unshift(newProperty);
+
+  try {
+    const raw = localStorage.getItem("KALASIN_USER_WOOD_LISTINGS");
+    const stored = raw ? JSON.parse(raw) : [];
+    stored.unshift(newProperty);
+    localStorage.setItem("KALASIN_USER_WOOD_LISTINGS", JSON.stringify(stored));
+  } catch (e) {
+    console.error("LocalStorage save error:", e);
+  }
+
+  closeWoodSubmissionModal();
+  document.getElementById("woodSubmissionForm").reset();
+  submissionCustomImageBase64 = null;
+  const previewBox = document.getElementById("subImagePreviewBox");
+  if (previewBox) previewBox.classList.add("hidden");
+
+  renderPropertyList(PROPERTIES_DATA);
+  updateMapMarkers(PROPERTIES_DATA);
+
+  if (mapInstance) {
+    mapInstance.setView([jitterLat, jitterLng], 12);
+  }
+
+  const catalogTabBtn = document.querySelector('.nav-tab[data-tab="tab-catalog"]');
+  if (catalogTabBtn) catalogTabBtn.click();
+
+  alert(`🎉 ลงประกาศสำเร็จเรียบร้อยแล้ว!\n\nรายการ: ${newProperty.title}\nราคา: ฿${price.toLocaleString()} บาท\nมูลค่าเนื้อไม้ประเมิน: ฿${woodEstimate.toLocaleString()} บาท\n\nรายการนี้ได้ถูกบันทึกเข้าสู่ตลาดอสังหาริมทรัพย์และแผนที่ GIS กาฬสินธุ์แล้วครับ`);
 }

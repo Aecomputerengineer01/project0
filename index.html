@@ -58,18 +58,22 @@
         </div>
 
         <!-- Role Simulator & Actions -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3">
           <a href="chapter1_react.html" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shadow-sm flex items-center gap-1">
-            <span>📄 อ่านบทที่ 1 (ReactJS)</span>
+            <span>📄 บทที่ 1 (ReactJS)</span>
           </a>
 
-          <div class="hidden md:flex items-center bg-slate-100 p-1.5 rounded-lg border border-slate-200 text-xs">
-            <span class="text-slate-500 font-semibold px-2">บทบาทการเข้าถึง:</span>
+          <button onclick="openWoodSubmissionModal()" class="bg-gradient-to-r from-amber-700 to-amber-900 hover:from-amber-800 hover:to-amber-950 text-white text-xs font-bold px-3 py-2 rounded-lg transition shadow-sm flex items-center gap-1.5 border border-amber-600/50">
+            <span>🪵 + ลงประกาศบ้านไม้เก่า</span>
+          </button>
+
+          <div class="hidden lg:flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs">
+            <span class="text-slate-500 font-semibold px-2">บทบาท:</span>
             <select id="roleSelect" class="bg-white border border-slate-300 text-slate-800 rounded px-2 py-1 font-medium focus:outline-none">
-              <option value="investor">นักลงทุน / สมาชิกพรีเมียม (Full Analytics)</option>
-              <option value="guest">ผู้ใช้งานทั่วไป (Guest View)</option>
-              <option value="vendor">ผู้ขาย / ช่างรื้อถอน (Vendor/Contractor)</option>
-              <option value="admin">ผู้ดูแลระบบ (Admin)</option>
+              <option value="investor">นักลงทุน / พรีเมียม</option>
+              <option value="guest">ผู้ใช้งานทั่วไป</option>
+              <option value="vendor">ผู้ขาย / ช่างไม้</option>
+              <option value="admin">ผู้ดูแลระบบ</option>
             </select>
           </div>
 
@@ -107,13 +111,13 @@
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="max-w-2xl">
         <span class="inline-block bg-amber-500/20 text-amber-300 text-xs px-3 py-1 rounded-full font-medium border border-amber-500/30 mb-3">
-          📍 ข้อมูลซิงค์สดตรงจาก https://www.fastledchecker.com (กาฬสินธุ์ 106+ รายการเจาะลึก / คลังรวม 2,619+ รายการ)
+          📍 ข้อมูลซิงค์สดตรงจาก https://www.fastledchecker.com (ครบทั้ง 18 อำเภอ กาฬสินธุ์ 378+ รายการ / คลังรวม 2,619+ รายการ)
         </span>
         <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
           ตลาดอสังหาริมทรัพย์ ทรัพย์บังคับคดี <br class="hidden sm:inline">และสิ่งปลูกสร้างไม้เก่า กาฬสินธุ์
         </h2>
         <p class="text-slate-300 text-sm leading-relaxed mb-4">
-          รวบรวมและวิเคราะห์ข้อมูลทรัพย์ขายทอดตลาดจากกรมบังคับคดีในจังหวัดกาฬสินธุ์ครอบคลุมทั้ง 18 อำเภอ วิเคราะห์ราคาเสนอประมูลสูงสุด (Maximum Bid) ภาระจำนองติดไป และประเมินมูลค่าไม้เก่าในสิ่งปลูกสร้าง
+          รวบรวมและวิเคราะห์ข้อมูลทรัพย์ขายทอดตลาดจากกรมบังคับคดีในจังหวัดกาฬสินธุ์ครอบคลุมทั้ง 18 อำเภอ วิเคราะห์ราคาเสนอประมูลสูงสุด (Maximum Bid) ภาระจำนองติดไป พร้อมช่องทางลงประกาศบ้านไม้เก่าและประเมินมูลค่าเนื้อไม้อัตโนมัติ
         </p>
       </div>
 
@@ -125,11 +129,11 @@
         </div>
         <div class="grid grid-cols-2 gap-3 text-xs">
           <div>
-            <span class="text-slate-400">ทรัพย์ซิงค์สดล่าสุด:</span>
-            <p class="text-lg font-bold text-amber-400">106 รายการ</p>
+            <span class="text-slate-400">ทรัพย์ครอบคลุม 18 อำเภอ:</span>
+            <p class="text-lg font-bold text-amber-400">378 รายการ</p>
           </div>
           <div>
-            <span class="text-slate-400">คลังทรัพย์กาฬสินธุ์:</span>
+            <span class="text-slate-400">คลังรวมกาฬสินธุ์:</span>
             <p class="text-lg font-bold text-emerald-400">2,619+ ทรัพย์</p>
           </div>
         </div>
@@ -278,6 +282,23 @@
 
     <!-- TAB 3: Old Wooden Buildings & Wood Valuation -->
     <section id="tab-wood" class="tab-content hidden">
+      
+      <!-- Wood Submission Action Banner -->
+      <div class="mb-6 bg-gradient-to-r from-amber-950 via-amber-900 to-orange-900 text-white p-5 sm:p-6 rounded-2xl shadow-md flex flex-col md:flex-row items-center justify-between gap-4 border border-amber-800">
+        <div>
+          <span class="inline-flex items-center gap-1 bg-amber-500/20 text-amber-300 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-amber-400/30 mb-2">
+            <span>📢</span> เปิดรับลงประกาศฟรี ครอบคลุม 18 อำเภอ จังหวัดกาฬสินธุ์
+          </span>
+          <h4 class="text-lg sm:text-xl font-bold text-white">ต้องการขายบ้านไม้เก่า ยุ้งข้าวโบราณ หรือประเมินมูลค่าเนื้อไม้?</h4>
+          <p class="text-xs text-amber-200/90 mt-1 max-w-2xl">
+            เจ้าของบ้าน ช่างรื้อถอน หรือนายหน้า สามารถส่งข้อมูลสิ่งปลูกสร้างไม้เก่าเข้าสู่ระบบตลาดดิจิทัลกาฬสินธุ์ได้ฟรี พร้อมระบบคำนวณราคาประเมินและจับคู่ผู้ซื้อ
+          </p>
+        </div>
+        <button onclick="openWoodSubmissionModal()" class="shrink-0 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-extrabold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-lg transition flex items-center gap-2">
+          <span>🪵 + ลงประกาศขายบ้านไม้เก่า / ประเมินฟรี</span>
+        </button>
+      </div>
+
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-10 h-10 bg-amber-900 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
@@ -368,6 +389,184 @@
     </section>
 
   </main>
+
+  <!-- Wood House Submission Modal -->
+  <div id="woodSubmissionModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 relative shadow-2xl border border-slate-200">
+      <button onclick="closeWoodSubmissionModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold transition">✕</button>
+
+      <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+        <div class="w-10 h-10 bg-amber-900 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
+          🪵
+        </div>
+        <div>
+          <h3 class="text-lg font-extrabold text-slate-900">ลงประกาศขายสิ่งปลูกสร้างไม้เก่า / ส่งประเมินราคา</h3>
+          <p class="text-xs text-slate-500">ระบบประเมินมูลค่าไม้อัตโนมัติและเผยแพร่ลงสู่ตลาดดิจิทัลจังหวัดกาฬสินธุ์</p>
+        </div>
+      </div>
+
+      <form id="woodSubmissionForm" onsubmit="handleWoodSubmission(event)" class="space-y-4">
+        
+        <!-- Section 1: ข้อมูลทั่วไป -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-amber-900">1. ข้อมูลสิ่งปลูกสร้าง & ทำเลที่ตั้ง</h4>
+          
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อหัวข้อประกาศ <span class="text-red-500">*</span></label>
+            <input type="text" id="subTitle" required placeholder="เช่น เรือนไทยประยุกต์ไม้สักทอง 24 เสา หรือ ยุ้งข้าวโบราณไม้แดง" class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">อำเภอในจังหวัดกาฬสินธุ์ <span class="text-red-500">*</span></label>
+              <select id="subDistrict" required class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+                <!-- Populated dynamically with all 18 districts -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">ตำบล / หมู่บ้าน <span class="text-red-500">*</span></label>
+              <input type="text" id="subSubdistrict" required placeholder="เช่น ต.ยางตลาด บ้านหนองอิเฒ่า" class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">ประเภทสิ่งปลูกสร้าง <span class="text-red-500">*</span></label>
+            <select id="subCategory" required class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+              <option value="เรือนไทยโบราณ / เรือนไทยประยุกต์">เรือนไทยโบราณ / เรือนไทยประยุกต์ (เสากลม/เหลี่ยม)</option>
+              <option value="ยุ้งข้าวไม้เก่าโบราณ (หลองข้าว)">ยุ้งข้าวไม้เก่าโบราณ (หลองข้าวอีสานทรงคุณค่า)</option>
+              <option value="บ้านเดี่ยวไม้ 2 ชั้น / ใต้ถุนสูง">บ้านเดี่ยวไม้ 2 ชั้น / บ้านไม้ใต้ถุนสูง</option>
+              <option value="บ้านเดี่ยวครึ่งตึกครึ่งไม้">บ้านเดี่ยวครึ่งตึกครึ่งไม้ (โครงสร้างชั้นบนไม้เก่า)</option>
+              <option value="อาคารพาณิชย์ไม้เก่า">อาคารพาณิชย์ไม้เก่า / ห้องแถวไม้โบราณ</option>
+              <option value="กองไม้แปรรูปเก่า / เสาไม้โบราณ">กองไม้แปรรูปเก่า / เสาไม้โบราณถอดแล้ว</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Section 2: ข้อมูลเนื้อไม้ & การประเมิน -->
+        <div class="bg-amber-50/70 p-4 rounded-xl border border-amber-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-amber-900">2. ข้อมูลเชิงลึกด้านเนื้อไม้ (Wood Engine)</h4>
+            <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full font-semibold">คำนวณอัตโนมัติ</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">ชนิดไม้หลัก</label>
+              <select id="subWoodType" onchange="updateSubmissionWoodValuation()" class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+                <option value="ไม้สัก (Teak)">ไม้สักทอง (Teak) - ฿45,000/ลบ.ม.</option>
+                <option value="ไม้ประดู่ (Rosewood)">ไม้ประดู่ (Rosewood) - ฿38,000/ลบ.ม.</option>
+                <option value="ไม้แดง (Ironwood)">ไม้แดง (Ironwood) - ฿32,000/ลบ.ม.</option>
+                <option value="ไม้เต็ง (Red Balau)">ไม้เต็ง (Red Balau) - ฿28,000/ลบ.ม.</option>
+                <option value="ไม้เนื้อแข็งรวม (Mixed Hardwood)">ไม้เนื้อแข็งรวม - ฿20,000/ลบ.ม.</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">รูปแบบการจำหน่าย</label>
+              <select id="subSaleType" class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+                <option value="พร้อมรื้อถอนและขนย้าย">พร้อมรื้อถอนและขนย้าย (Salvage & Move)</option>
+                <option value="ขายพร้อมที่ดินเดิม">ขายพร้อมที่ดินเดิม</option>
+                <option value="ขายเฉพาะเสาและไม้แปรรูป">ขายเฉพาะเสาและไม้แผ่นแปรรูป</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">ปริมาตรไม้ประมาณการ (ลบ.ม.)</label>
+              <input type="number" id="subVolume" value="22" min="1" step="0.5" oninput="updateSubmissionWoodValuation()" class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนเสาเรือนโบราณ (ต้น)</label>
+              <input type="number" id="subPillars" value="16" min="0" oninput="updateSubmissionWoodValuation()" class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center text-xs font-semibold text-slate-700 mb-1">
+              <span>สภาพความสมบูรณ์ของเนื้อไม้ (%)</span>
+              <span id="subConditionVal" class="text-amber-800 font-bold">88%</span>
+            </div>
+            <input type="range" id="subCondition" min="50" max="100" value="88" oninput="document.getElementById('subConditionVal').innerText = this.value + '%'; updateSubmissionWoodValuation()" class="w-full accent-amber-700">
+          </div>
+
+          <!-- Live Estimation Box -->
+          <div class="bg-gradient-to-br from-amber-950 to-slate-900 text-white p-3.5 rounded-xl border border-amber-800/80 mt-2">
+            <div class="flex items-center justify-between text-xs text-amber-300 font-semibold mb-1">
+              <span>⚡ ผลประเมินอัตโนมัติ Wood Engine:</span>
+              <button type="button" onclick="applySuggestedWoodPrice()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-2 py-0.5 rounded text-[11px] transition">
+                ใช้ราคาประเมินนี้
+              </button>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <span class="text-slate-400">มูลค่าไม้ประเมินสุทธิ:</span>
+                <p id="subLiveValuation" class="text-lg font-bold text-amber-400">฿0</p>
+              </div>
+              <div>
+                <span class="text-slate-400">ช่วงราคาแนะนำ:</span>
+                <p id="subLiveRange" class="text-xs font-semibold text-emerald-300 mt-1">฿0 - ฿0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: การตั้งราคา & รูปภาพ -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">3. ราคาเสนอขาย & รูปภาพ</h4>
+          
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">ราคาที่ต้องการตั้งขาย (บาท) <span class="text-red-500">*</span></label>
+            <input type="number" id="subPrice" required min="10000" step="5000" placeholder="เช่น 280000" class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 font-bold text-amber-900 focus:outline-none focus:ring-2 focus:ring-amber-600">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">รูปภาพสิ่งปลูกสร้าง (ลิงก์รูปภาพ หรือเลือกรูปจากเครื่อง)</label>
+            <div class="flex gap-2">
+              <input type="url" id="subImageUrl" placeholder="https://... หรืออัปโหลดไฟล์ด้านขวา" class="flex-1 text-xs bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none">
+              <label class="cursor-pointer bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs px-3 py-2.5 rounded-lg font-semibold flex items-center gap-1 transition">
+                <span>📁 แนบไฟล์</span>
+                <input type="file" id="subImageFile" accept="image/*" onchange="previewSubmissionImage(event)" class="hidden">
+              </label>
+            </div>
+            <div id="subImagePreviewBox" class="mt-2 hidden">
+              <img id="subImagePreview" src="" alt="Preview" class="w-full h-32 object-cover rounded-lg border border-slate-300">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: ข้อมูลติดต่อผู้ขาย -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">4. ข้อมูลติดต่อผู้ขาย</h4>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อผู้ลงประกาศ / ผู้ถือกรรมสิทธิ์ <span class="text-red-500">*</span></label>
+              <input type="text" id="subContactName" required placeholder="เช่น คุณสมศักดิ์ ขอนแก่น/กาฬสินธุ์" class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">เบอร์โทรศัพท์ติดต่อ <span class="text-red-500">*</span></label>
+              <input type="tel" id="subContactPhone" required placeholder="เช่น 089-123-4567" class="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-600">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">รายละเอียดเพิ่มเติม / จุดเด่นของไม้</label>
+            <textarea id="subFeatures" rows="2" placeholder="เช่น ไม้แห้งสนิท ไร้ปลวก อายุเรือนกว่า 50 ปี มีทีมช่างพร้อมรื้อถอนทันที" class="w-full text-xs bg-white border border-slate-300 rounded-lg p-2.5 focus:outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button type="button" onclick="closeWoodSubmissionModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl transition text-xs sm:text-sm">
+            ยกเลิก
+          </button>
+          <button type="submit" class="flex-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-extrabold py-3 px-6 rounded-xl shadow-md transition text-xs sm:text-sm flex items-center justify-center gap-2">
+            <span>✓ ยืนยันการลงประกาศ (Submit Listing)</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 
   <!-- Property Detail Modal -->
   <div id="propertyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
