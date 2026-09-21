@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id                   String   @id
+  title                String
+  type                 String   // "led_asset", "wooden_building", "normal"
+  assetCategory        String
+  district             String
+  subdistrict          String
+  address              String
+  deedNo               String
+  priceStarting        Float
+  priceAppraised       Float
+  marketEstimate       Float
+  mortgageDebt         Float    @default(0)
+  realTotalPayment     Float
+  auctionDate          String?
+  competitorStatus     String?
+  isMortgageAttached   Boolean  @default(false)
+  evictionRisk         String   @default("low") // "low", "medium", "high", "none"
+  evictionCostEst      Float    @default(0)
+  renovationCostEst    Float    @default(0)
+  areaSqW              Float    @default(0)
+  usableAreaSqM        Float    @default(0)
+  lat                  Float
+  lng                  Float
+  status               String
+  ledCourt             String?
+  ledCaseNo            String?
+  reserveFund          Float    @default(50000)
+  saleLocation         String?
+  dataSourceUrl        String?
+  images               String   // Stored as JSON string array
+  features             String   // Stored as JSON string array
+  contactName          String?
+  contactPhone         String?
+  hasExistingStructure Boolean  @default(false)
+  
+  // Wood details if applicable
+  woodType             String?
+  woodVolumeCubicM     Float?
+  woodPillars          Int?
+  woodConditionPercent Float?
+  woodValueEstimate    Float?
+  salvageFeasibility   String?
+  isUserSubmitted      Boolean  @default(false)
+
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model Contractor {
+  id              String   @id
+  name            String
+  district        String
+  phone           String
+  experienceYears Int
+  specialty       String
+  rating          Float    @default(4.5)
+  reviewsCount    Int      @default(0)
+  completedJobs   Int?     @default(0)
+  createdAt       DateTime @default(now())
+}
